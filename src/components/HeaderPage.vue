@@ -3,19 +3,20 @@
 <div class="header">
     <div class="title">图书管理系统</div>
     <div class="user-icon">
-        <el-icon><User /></el-icon>
+        <el-dropdown>
+            <el-icon class="user-icon"><User /></el-icon>
+            <template #dropdown>
+            <el-dropdown-menu>
+                <el-dropdown-item>退出登录</el-dropdown-item>
+            </el-dropdown-menu>
+            </template>
+        </el-dropdown>
     </div>
 </div>
 </template>
 
 <script setup>
 import { User } from '@element-plus/icons-vue';
-// export default {
-// name: 'headerPage',
-// props: {
-//     msg: String
-// }
-// }
 </script>
 
 <style scoped>
@@ -37,6 +38,7 @@ import { User } from '@element-plus/icons-vue';
     
     font-size: 20px;
     cursor: pointer;
+    color: #fff;
 }
 </style> 
   

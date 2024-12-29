@@ -4,6 +4,9 @@
     <HeaderPage></HeaderPage>
     <div class="contain">
       <AsidePage></AsidePage>
+      <div class="form-box">
+          <router-view></router-view>
+      </div>
     </div>
   </div>
 </template>
@@ -28,7 +31,12 @@ export default {
 }
 .contain {
   flex: 1;
-  /* display: flex;
-  flex-direction: row; */
+  display: flex;
+}
+.form-box {
+  flex: 1;
+  margin: 30px;
+  height: 800px;
+  overflow: scroll;
 }
 </style> 
