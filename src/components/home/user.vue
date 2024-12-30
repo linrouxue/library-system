@@ -1,25 +1,31 @@
 <template>
-<el-table :data="filterTableData" style="width: 100%">
-    <el-table-column label="Date" prop="date" />
-    <el-table-column label="Name" prop="name" />
-    <el-table-column align="right">
-    <template #header>
-        <el-input v-model="search" size="small" placeholder="Type to search" />
-    </template>
-    <template #default="scope">
-        <el-button size="small" @click="handleEdit(scope.$index, scope.row)">
-        Edit
-        </el-button>
+    <div>
         <el-button
-        size="small"
-        type="danger"
-        @click="handleDelete(scope.$index, scope.row)"
-        >
-        Delete
+            size="small"
+            @click="handleDelete(scope.$index, scope.row)"
+            >
+            添加书籍
         </el-button>
-    </template>
-    </el-table-column>
-</el-table>
+        <el-table :data="filterTableData" style="width: 100%" class="box">
+            <el-table-column label="借书证号" prop="readID" />
+            <el-table-column label="姓名" prop="name" />
+            <el-table-column label="联系方式" prop="phone" />
+            <el-table-column align="right">
+            <template #header>
+                <el-input v-model="search" size="small" placeholder="搜索" />
+            </template>
+            <template #default="scope">
+                <el-button
+                size="small"
+                type="danger"
+                @click="handleDelete(scope.$index, scope.row)"
+                >
+                删除
+                </el-button>
+            </template>
+            </el-table-column>
+        </el-table>
+    </div>
 </template>
 
 <script setup>
@@ -34,10 +40,8 @@ tableData.filter(
     data.name.toLowerCase().includes(search.value.toLowerCase())
 )
 )
-const handleEdit=(index,row)=> {
-console.log(index, row)
-}
 const handleDelete = (index,row) => {
+    //删除读者信息
 console.log(index, row)
 }
 

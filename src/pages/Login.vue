@@ -80,6 +80,7 @@ const onSubmit = () => {
     width: 500px;
     height: 300px;
     border-radius: 12px;
+    background-color: #fff;
 }
 </style> 
   

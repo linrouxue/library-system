@@ -36,7 +36,5 @@ export default {
 .form-box {
   flex: 1;
   margin: 30px;
-  height: 800px;
-  overflow: scroll;
 }
 </style> 

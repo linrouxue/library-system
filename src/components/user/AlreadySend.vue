@@ -1,9 +1,9 @@
 <template>
 <el-table :data="filterTableData" style="width: 100%">
+    <el-table-column label="借书证号" prop="readID" />
     <el-table-column label="图书ID" prop="bookID" />
-    <el-table-column label="书名" prop="bname" />
-    <el-table-column label="作者" prop="author" />
-    <el-table-column label="出版社" prop="press" />
+    <el-table-column label="借书日期" prop="startTime" />
+    <el-table-column label="还书日期" prop="endTime" />
     <el-table-column align="right">
     <template #header>
         <el-input v-model="search" size="small" placeholder="搜索" />
@@ -64,4 +64,4 @@ const tableData = [
     
 <style scoped>
 </style> 
-          
+            
