@@ -11,16 +11,10 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import HeaderPage from '@/components/HeaderPage.vue';
 import AsidePage from '@/components/AsidePage.vue';
-export default {
-  name: 'HomePage',
-  components: {
-    HeaderPage,
-    AsidePage
-  },
-}
+
 </script>
 
 <style scoped>

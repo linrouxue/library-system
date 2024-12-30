@@ -20,13 +20,13 @@
                     />
                 </el-form-item>
                 <el-form-item label="类别">
-                <el-radio-group v-model="form.class">
+                <el-radio-group v-model="form.role">
                     <el-radio value="user">用户</el-radio>
-                    <el-radio value="manage">管理员</el-radio>
+                    <el-radio value="admin">管理员</el-radio>
                 </el-radio-group>
                 </el-form-item>
                 <el-form-item>
-                <router-link to="/home"><el-button type="primary" @click="onSubmit">登录</el-button></router-link>
+                <el-button type="primary" @click="onSubmit">登录</el-button>
                 </el-form-item>
             </el-form>
             </div>
@@ -35,15 +35,38 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue'
+import { reactive, toRefs } from 'vue'
+import { login } from '@/utils/api.js';
+import router from '@/router';
+import { ElMessage } from 'element-plus';
+
 const form = reactive({
   account: '',
   password: '',
-  class: '',
+  role: '',
 })
 
+const { account, password, role } = toRefs(form);
 const onSubmit = () => {
-  console.log('submit!')
+    login('/login', {
+        account: account.value,
+        password: password.value,
+        role: role.value
+    }).then(res => {
+        if(res.data.status===200){
+            localStorage.setItem('role', res.data.role);//保存角色
+            router.push('/home');
+            ElMessage({
+                message: '登录成功',
+                type: 'success',
+            })
+        }else{
+            ElMessage.error(res.data.message);
+        }
+    }).catch(err => {
+        console.log(err);
+        ElMessage.error('登录失败');
+    })
 }
 </script>
 

@@ -8,10 +8,10 @@
             <template #dropdown>
             <el-dropdown-menu>
                 <el-dropdown-item @click="loginOut">
-                    <router-link to="/login" class="login-out">退出登录</router-link>
+                    退出登录
                 </el-dropdown-item>
                 <el-dropdown-item>
-                    <span class="login-out">修改密码</span>
+                    修改密码
                 </el-dropdown-item>
             </el-dropdown-menu>
             </template>
@@ -22,7 +22,12 @@
 
 <script setup>
 import { User } from '@element-plus/icons-vue';
+import router from '@/router';
 
+const loginOut = () => {
+    localStorage.clear();
+    router.push('/login');
+}
 </script>
 
 <style scoped>
@@ -45,10 +50,6 @@ import { User } from '@element-plus/icons-vue';
     font-size: 20px;
     cursor: pointer;
     color: #fff;
-}
-.login-out {
-    text-decoration:none;
-    color: #3a8fe4;
 }
 </style> 
   

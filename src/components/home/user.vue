@@ -4,7 +4,7 @@
             size="small"
             @click="handleDelete(scope.$index, scope.row)"
             >
-            添加书籍
+            添加用户
         </el-button>
         <el-table :data="filterTableData" style="width: 100%" class="box">
             <el-table-column label="借书证号" prop="readID" />
@@ -29,9 +29,20 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, onBeforeMount } from 'vue'
+import axios from 'axios'
 
-
+onBeforeMount(() => {
+  axios.post('http://localhost:3000/api')
+    .then(response => {
+    // 处理成功响应
+    console.log(response.data);
+    })
+    .catch(error => {
+    // 处理错误
+    console.error('Error fetching data:', error);
+    });
+});
 const search = ref('')
 const filterTableData = computed(() =>
 tableData.filter(
@@ -70,5 +81,8 @@ const tableData = [
 </script>
   
 <style scoped>
+.box {
+
+}
 </style> 
       

@@ -1,24 +1,32 @@
 <template>
-<el-table :data="filterTableData" style="width: 100%">
-    <el-table-column label="图书ID" prop="bookID" />
-    <el-table-column label="书名" prop="bname" />
-    <el-table-column label="作者" prop="author" />
-    <el-table-column label="出版社" prop="press" />
-    <el-table-column align="right">
-    <template #header>
-        <el-input v-model="search" size="small" placeholder="搜索" />
-    </template>
-    <template #default="scope">
+    <div>
         <el-button
         size="small"
-        type="danger"
         @click="handleDelete(scope.$index, scope.row)"
         >
-        删除
-        </el-button>
-    </template>
-    </el-table-column>
-</el-table>
+        添加书籍
+    </el-button>
+    <el-table :data="filterTableData" style="width: 100%">
+        <el-table-column label="图书ID" prop="bookID" />
+        <el-table-column label="书名" prop="bname" />
+        <el-table-column label="作者" prop="author" />
+        <el-table-column label="出版社" prop="press" />
+        <el-table-column align="right">
+        <template #header>
+            <el-input v-model="search" size="small" placeholder="搜索" />
+        </template>
+        <template #default="scope">
+            <el-button
+            size="small"
+            type="danger"
+            @click="handleDelete(scope.$index, scope.row)"
+            >
+            删除
+            </el-button>
+        </template>
+        </el-table-column>
+    </el-table>
+    </div>
 </template>
 
 <script setup>
