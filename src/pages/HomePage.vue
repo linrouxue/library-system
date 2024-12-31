@@ -22,6 +22,7 @@ import AsidePage from '@/components/AsidePage.vue';
   display: flex;
   flex-direction: column;
   height: 100vh;
+  width: 100vw;
 }
 .contain {
   flex: 1;
@@ -30,5 +31,6 @@ import AsidePage from '@/components/AsidePage.vue';
 .form-box {
   flex: 1;
   margin: 30px;
+  max-height: 80%;
 }
 </style> 

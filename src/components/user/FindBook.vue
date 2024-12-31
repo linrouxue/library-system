@@ -1,5 +1,5 @@
 <template>
-<el-table :data="filterTableData" style="width: 100%">
+<el-table :data="filterTableData" style="width: 100%"  height='800'>
     <el-table-column label="图书ID" prop="bookID" />
     <el-table-column label="书名" prop="bname" />
     <el-table-column label="作者" prop="author" />

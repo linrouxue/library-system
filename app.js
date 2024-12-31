@@ -33,17 +33,8 @@ connection.connect((err) => {
   console.log('Connected to MySQL database as id ' + connection.threadId);//第一步
 });
 
-connection.query('SELECT * FROM reader', (err, results, fields) => {
-  if (err) throw err;
-  console.log('Results: ', results);
-
-  app.post('/api', (req, res) => {
-    res.send(results);
-  });
-
-  app.listen(3000, () => {
-    console.log('Server started on port 3000');//最后
-  });
+app.listen(3000, () => {
+  console.log('Server started on port 3000');//最后
 });
 
 
@@ -65,7 +56,86 @@ app.post('/login', (req, res) => {
   })
 });
 
+// 新增用户
+app.post('/admin/addUser', (req, res) => {
+  const { RID, Sname, Sphone, password, role } = req.body;
+  connection.query('INSERT INTO reader (RID, Sname, Sphone, password, role) VALUES (?, ?, ?, ?, ?)', [RID, Sname, Sphone, password, role], (err) => {
+    if (err) throw err;
+    res.json({ message: '用户添加成功' });
+  });
+});
 
+// 展示用户
+app.get('/admin/showUser', (req, res) => {
+  connection.query('SELECT * FROM reader', (err, results) => {
+    if (err) throw err;
+    res.json(results);
+  });
+});
+
+// 搜索用户
+app.post('/admin/searchUser', (req, res) => {
+  const { search } = req.body;
+  const query = 'SELECT * FROM reader WHERE Rid LIKE ? OR Sname LIKE ?';
+  const searchPattern = `%${search}%`;
+  connection.query(query, [searchPattern, searchPattern], (err, results) => {
+    if (err) {
+      res.json({ error: '查询出错' });
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+// 删除用户
+app.post('/admin/deleteUser', (req, res) => {
+  const { RID } = req.body;
+  connection.query('DELETE FROM reader WHERE RID = ?', [RID], (err) => {
+    if (err) throw err;
+    res.json({ message: '用户删除成功' });
+  });
+});
+
+
+// 添加书籍
+app.post('/admin/addBook', (req, res) => {
+  const { BID, Bname, Author, Press } = req.body;
+  connection.query('INSERT INTO  book (BID, Bname, Author, Press) VALUES (?, ?, ?, ?)', [BID, Bname, Author, Press], (err) => {
+    if (err) throw err;
+    res.json({ message: '书籍添加成功' });
+  });
+});
+
+// 展示书籍
+app.get('/admin/showBook', (req, res) => {
+  connection.query('SELECT * FROM book', (err, results) => {
+    if (err) throw err;
+    res.json(results);
+  });
+});
+
+// 搜索书籍
+app.post('/admin/searchBook', (req, res) => {
+  const { search } = req.body;
+  const query = 'SELECT * FROM book WHERE BID LIKE ? OR Bname LIKE ?';
+  const searchPattern = `%${search}%`;
+  connection.query(query, [searchPattern, searchPattern], (err, results) => {
+    if (err) {
+      res.json({ error: '查询出错' });
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+// 删除书籍
+app.post('/admin/deleteBook', (req, res) => {
+  const { BID } = req.body;
+  connection.query('DELETE FROM book WHERE BID = ?', [BID], (err) => {
+    if (err) throw err;
+    res.json({ message: '书籍删除成功' });
+  });
+});
 
 
 

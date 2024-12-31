@@ -43,7 +43,7 @@ import { ElMessage } from 'element-plus';
 const form = reactive({
   account: '',
   password: '',
-  role: '',
+  role: 'user',
 })
 
 const { account, password, role } = toRefs(form);
