@@ -34,7 +34,7 @@
             <el-table-column label="出版社" prop="Press" />
             <el-table-column align="right">
             <template #header>
-                <el-input v-model="search" size="small" placeholder="搜索" @input="filterTableData"/>
+                <el-input v-model="search" size="small" placeholder="请输入图书ID/书名" @input="filterTableData"/>
             </template>
             <template #default="scope">
                 <el-button

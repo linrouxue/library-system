@@ -79,6 +79,22 @@ export const deleteBook = (url, data)=>{
   });
 }
 
+// 查询借阅详情
+export const showSend = (url)=>{
+  return request({
+    url: url,
+    method: 'get',
+  });
+}
+
+// 搜索借阅详情
+export const searchSend = (url, data)=>{
+  return request({
+    url: url,
+    method: 'post',
+    data: data
+  });
+}
 
 // export const fetchData = (url, params) => {
 //   return request({

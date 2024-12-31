@@ -137,8 +137,29 @@ app.post('/admin/deleteBook', (req, res) => {
   });
 });
 
+// 查询借阅详情
+app.get('/admin/showSend', (req, res) => {
+  // 从视图表中获取
+  connection.query('SELECT * FROM borrow_view', (err, results) => {
+    if (err) throw err;
+    res.json(results);
+  });
+});
 
-
+// 搜索借阅详情
+app.post('/admin/searchSend', (req, res) => {
+  const { search } = req.body;
+  // 从视图中获取
+  const query = 'SELECT * FROM borrow_view WHERE BID LIKE ? OR RID LIKE ? OR Sname LIKE ? OR Bname LIKE ?';
+  const searchPattern = `%${search}%`;
+  connection.query(query, [searchPattern, searchPattern, searchPattern, searchPattern], (err, results) => {
+    if (err) {
+      res.json({ error: '查询出错' });
+    } else {
+      res.json(results);
+    }
+  });
+});
 
 
 

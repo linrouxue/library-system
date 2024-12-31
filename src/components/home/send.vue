@@ -1,67 +1,76 @@
 <template>
-<el-table :data="filterTableData" style="width: 100%" height='800'>
-    <el-table-column label="借书证号" prop="readID" />
-    <el-table-column label="图书ID" prop="bookID" />
-    <el-table-column label="借书日期" prop="startTime" />
-    <el-table-column label="还书日期" prop="endTime" />
-    <el-table-column align="right">
-    <template #header>
-        <el-input v-model="search" size="small" placeholder="搜索" />
-    </template>
-    <template #default="scope">
-        <el-button
-        size="small"
-        type="danger"
-        @click="handleDelete(scope.$index, scope.row)"
-        >
-        删除
-        </el-button>
-    </template>
-    </el-table-column>
-</el-table>
+    <div>
+        <el-table :data="tableData" style="width: 100%" class="box" height='800'>
+            <el-table-column label="借书证号" prop="Rid" />
+            <el-table-column label="姓名" prop="Sname" />
+            <el-table-column label="图书ID" prop="BID" />
+            <el-table-column label="书名" prop="Bname" />
+            <el-table-column label="借阅日期" prop="startTime" />
+            <el-table-column label="归还日期" prop="endTime" />
+            <el-table-column align="right">
+            <template #header>
+                <el-input v-model="search" size="small" placeholder="借书证号/姓名/图书ID/书名" @input="filterTableData"/>
+            </template>
+            </el-table-column>
+        </el-table>
+    </div>
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { ref, onBeforeMount,reactive} from 'vue'
+import { showSend, searchSend} from '@/utils/api.js';
+import { ElMessage, ElMessageBox} from 'element-plus';
 
-
-const search = ref('')
-const filterTableData = computed(() =>
-tableData.filter(
-    (data) =>
-    !search.value ||
-    data.name.toLowerCase().includes(search.value.toLowerCase())
-)
-)
-const handleDelete = (index,row) => {
-    //删除读者信息
-console.log(index, row)
+const sendForm = reactive({
+    Rid: '',
+    Sname: '',
+    BID: '',    
+    Bname: '',
+    startTime: '',
+    endTime: ''
+})
+let tableData = ref([])
+onBeforeMount(() => {
+    showSends()
+});
+const showSends = () => {
+    showSend('/admin/showSend').then(res => {
+        if(res.status===200){
+            tableData.value = res.data
+        }
+    }).catch(err => {
+        console.log(err);
+    })
 }
 
-const tableData = [
-{
-    date: '2016-05-03',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-},
-{
-    date: '2016-05-02',
-    name: 'John',
-    address: 'No. 189, Grove St, Los Angeles',
-},
-{
-    date: '2016-05-04',
-    name: 'Morgan',
-    address: 'No. 189, Grove St, Los Angeles',
-},
-{
-    date: '2016-05-01',
-    name: 'Jessy',
-    address: 'No. 189, Grove St, Los Angeles',
-},
-]
+// 搜索
+let timeout = ref(null);
+const filterTableData = () => {
+    if (timeout.value) {
+        clearTimeout(timeout.value);
+    }
+    timeout.value = setTimeout(() => {
+        searchSend(
+            '/admin/searchSend',
+            {
+                search: search.value
+            }
+        ).then(res => {
+            if (res.status === 200) {
+                tableData.value = res.data;
+            }
+        }).catch(err => {
+            console.log(err);
+        });
+    }, 1000);
+};
+const search = ref('')
+
 </script>
-    
+  
 <style scoped>
+.box {
+
+}
 </style> 
-          
+      
