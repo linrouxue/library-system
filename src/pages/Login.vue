@@ -56,7 +56,11 @@ const onSubmit = () => {
         if(res.data.status===200){
             localStorage.setItem('role', res.data.role);//保存角色
             localStorage.setItem('info', JSON.stringify(form));//保存登录信息
-            router.push('/home');
+            if(role.value === 'admin'){
+                router.push('/home/user');
+            }else{
+                router.push('/user/FindBook');
+            }
             ElMessage({
                 message: '登录成功',
                 type: 'success',

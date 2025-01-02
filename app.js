@@ -149,7 +149,7 @@ app.post('/admin/deleteBook', (req, res) => {
 // 查询借阅详情
 app.get('/admin/showSend', (req, res) => {
   // 从视图表中获取
-  connection.query('SELECT * FROM borrow_view', (err, results) => {
+  connection.query('SELECT * FROM borrow_view ORDER BY startTime DESC', (err, results) => {
     if (err) throw err;
     res.json(results);
   });
@@ -221,23 +221,5 @@ app.post('/user/backBook', (req, res) => {
 });
 
 
-
-
-
-
-
-
-
-
-
-//关闭数据库连接
-
-// connection.end((err) => {
-//   if (err) {
-//     console.error('Error closing MySQL database connection: ' + err.stack);
-//     return;
-//   }
-//   console.log('MySQL database connection closed');
-// });
 
  
