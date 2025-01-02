@@ -1,65 +1,114 @@
 <template>
-<el-table :data="filterTableData" style="width: 100%"  height='800'>
-    <el-table-column label="图书ID" prop="bookID" />
-    <el-table-column label="书名" prop="bname" />
-    <el-table-column label="作者" prop="author" />
-    <el-table-column label="出版社" prop="press" />
-    <el-table-column align="right">
-    <template #header>
-        <el-input v-model="search" size="small" placeholder="搜索" />
-    </template>
-    <template #default="scope">
-        <el-button
-        size="small"
-        type="danger"
-        @click="handleDelete(scope.$index, scope.row)"
-        >
-        删除
-        </el-button>
-    </template>
-    </el-table-column>
-</el-table>
+    <div>
+        <el-table :data="tableData" style="width: 100%" class="box" height='800'>
+            <el-table-column label="图书ID" prop="BID" />
+            <el-table-column label="书名" prop="Bname" />
+            <el-table-column label="作者" prop="Author" />
+            <el-table-column label="出版社" prop="Press" />
+            <el-table-column align="right">
+            <template #header>
+                <el-input v-model="search" size="small" placeholder="请输入图书ID/书名" @input="filterTableData"/>
+            </template>
+            <template #default="scope">
+                <el-button
+                size="small"
+                type="primary"
+                @click="sendBook(scope.$index, scope.row)"
+                :disabled="scope.row.status === '已被借阅'"
+                >
+                借阅
+                </el-button>
+            </template>
+            </el-table-column>
+        </el-table>
+    </div>
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { ref, onBeforeMount,reactive} from 'vue'
+import { userShowBook, userSearchBook, userSendBook} from '@/utils/api.js';
+import { ElMessage, ElMessageBox} from 'element-plus';
+import { nanoid } from 'nanoid';
+import moment from 'moment';
 
-
+const UserSendForm = reactive({
+    SID: '',
+    BID: '',
+    RID: '',
+    startTime: '',
+    endTime: null
+})
+let tableData = ref([])
+onBeforeMount(() => {
+    showBooks()
+});
+const showBooks = () => {
+    userShowBook('/user/showBook').then(res => {
+        if(res.status===200){
+            tableData.value = res.data
+        }
+    }).catch(err => {
+        console.log(err);
+    })
+}
+// 搜索
+let timeout = ref(null);
+const filterTableData = () => {
+    if (timeout.value) {
+        clearTimeout(timeout.value);
+    }
+    timeout.value = setTimeout(() => {
+        userSearchBook(
+            '/user/searchBook',
+            {
+                search: search.value
+            }
+        ).then(res => {
+            if (res.status === 200) {
+                tableData.value = res.data;
+            }
+        }).catch(err => {
+            console.log(err);
+        });
+    }, 1000);
+};
 const search = ref('')
-const filterTableData = computed(() =>
-tableData.filter(
-    (data) =>
-    !search.value ||
-    data.name.toLowerCase().includes(search.value.toLowerCase())
-)
-)
-const handleDelete = (index,row) => {
-    //删除读者信息
-console.log(index, row)
+
+// 借阅书籍
+const sendBook = (index,row) => {
+    ElMessageBox.confirm(
+    '确定借阅该书籍',
+    '温馨提示',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    }
+  )
+    .then(() => {
+        UserSendForm.SID = nanoid(8)
+        UserSendForm.BID = row.BID
+        UserSendForm.RID = JSON.parse(localStorage.getItem('info')).account
+        UserSendForm.startTime = moment().format('YYYY-MM-DD HH:mm:ss');
+        userSendBook('/user/sendBook',UserSendForm).then(res => {
+            if(res.status===200){
+                ElMessage.success(res.data.message);
+                showBooks()
+            }
+        }).catch(err => {
+            console.log(err);
+            ElMessage.error('借阅失败');
+        })
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '已取消操作',
+      })
+    })
+
 }
 
-const tableData = [
-{
-    date: '2016-05-03',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-},
-{
-    date: '2016-05-02',
-    name: 'John',
-    address: 'No. 189, Grove St, Los Angeles',
-},
-{
-    date: '2016-05-04',
-    name: 'Morgan',
-    address: 'No. 189, Grove St, Los Angeles',
-},
-{
-    date: '2016-05-01',
-    name: 'Jessy',
-    address: 'No. 189, Grove St, Los Angeles',
-},
-]
 </script>
     
 <style scoped>

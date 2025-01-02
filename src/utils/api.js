@@ -96,10 +96,46 @@ export const searchSend = (url, data)=>{
   });
 }
 
-// export const fetchData = (url, params) => {
-//   return request({
-//     url: url,
-//     method: 'get',
-//     params: params
-//   });
-// };
+// 用户查询书籍
+export const userShowBook = (url)=>{
+  return request({
+    url: url,
+    method: 'get',
+  });
+}
+
+// 用户搜索书籍
+export const userSearchBook = (url, data)=>{
+  return request({
+    url: url,
+    method: 'post',
+    data: data
+  });
+}
+
+// 用户借阅书籍
+export const userSendBook = (url, data)=>{
+  return request({
+    url: url,
+    method: 'post',
+    data: data
+  });
+}
+
+// 查看自己借阅书籍
+export const showBackBook = (url, params)=>{
+  return request({
+    url: url,
+    method: 'get',
+    params: params
+  });
+}
+
+// 归还书籍
+export const userBackBook = (url, data)=>{
+  return request({
+    url: url,
+    method: 'post',
+    data: data
+  });
+}

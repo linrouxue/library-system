@@ -55,6 +55,9 @@ app.post('/login', (req, res) => {
     }
   })
 });
+ 
+// 修改密码
+
 
 // 新增用户
 app.post('/admin/addUser', (req, res) => {
@@ -161,6 +164,55 @@ app.post('/admin/searchSend', (req, res) => {
   });
 });
 
+// 用户接口
+
+// 查询书籍
+app.get('/user/showBook', (req, res) => {
+  connection.query('SELECT * FROM books_view', (err, results) => {
+    if (err) throw err;
+    res.json(results);
+  });
+});
+// 搜索书籍
+app.post('/user/searchBook', (req, res) => {
+  const { search } = req.body;
+  const query = 'SELECT * FROM books_view WHERE BID LIKE ? OR Bname LIKE ?';
+  const searchPattern = `%${search}%`;
+  connection.query(query, [searchPattern, searchPattern], (err, results) => {
+    if (err) {
+      res.json({ error: '查询出错' });
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+// 借阅书籍
+app.post('/user/sendBook', (req, res) => {
+  const { SID, BID, RID, startTime, endTime } = req.body;
+  connection.query('INSERT INTO send (SID, BID, RID, startTime, endTime) VALUES (?, ?, ?, ?, ?)', [SID, BID, RID, startTime, endTime], (err) => {
+    if (err) throw err;
+    res.json({ message: '借阅成功' });
+  })
+});
+
+// 查看自己借阅的书籍
+app.get('/user/showBack', (req, res) => {
+  const { RID } = req.query;
+  connection.query('SELECT * FROM back_view WHERE RID = ? AND startTime IS NOT NULL AND endTime IS NULL', [RID], (err, results) => {
+    if (err) throw err;
+    res.json(results);
+  });
+});
+
+// 归还书籍
+app.post('/user/backBook', (req, res) => {
+  const { SID } = req.body;
+  connection.query('UPDATE send SET endTime = NOW() WHERE SID = ?', [SID], (err) => {
+    if (err) throw err;
+    res.json({ message: '归还成功' });
+  });
+});
 
 
 

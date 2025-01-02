@@ -15,7 +15,6 @@ const routes = [
     path: '/home',
     name: 'home',
     component: defineAsyncComponent(() => import('../pages/HomePage.vue')),
-    redirect: '/home/user',
     meta: { title: '首页' },
     children: [
         {
@@ -53,4 +52,19 @@ const router = createRouter({
   routes
 });
 
+// router.beforeEach((to, from, next) => {
+//   const role = localStorage.getItem('role');
+//   // 检查目标路径是否已经是重定向的目标路径，避免无限重定向
+//   if (to.path === '/home/user' || to.path === '/user/FindBook' || to.path === '/login') {
+//     next();
+//   } else {
+//     if (role === 'user') {
+//       next('/user/FindBook');
+//     } else if (role === 'admin') {
+//       next('/home/user');
+//     } else {
+//       next('/login');
+//     }
+//   }
+// });
 export default router;

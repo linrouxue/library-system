@@ -55,6 +55,7 @@ const onSubmit = () => {
     }).then(res => {
         if(res.data.status===200){
             localStorage.setItem('role', res.data.role);//保存角色
+            localStorage.setItem('info', JSON.stringify(form));//保存登录信息
             router.push('/home');
             ElMessage({
                 message: '登录成功',
