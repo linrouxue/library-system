@@ -57,7 +57,13 @@ app.post('/login', (req, res) => {
 });
  
 // 修改密码
-
+app.post('/changePassword', (req, res) => {
+  const { RID, password } = req.body;
+  connection.query('UPDATE reader SET password = ? WHERE RID = ?', [password, RID], (err) => {
+    if (err) throw err;
+    res.json({ message: '密码修改成功' });
+  });
+});
 
 // 新增用户
 app.post('/admin/addUser', (req, res) => {

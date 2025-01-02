@@ -17,18 +17,9 @@
 </template>
 
 <script setup>
-import { ref, onBeforeMount,reactive} from 'vue'
+import { ref, onBeforeMount} from 'vue'
 import { showSend, searchSend} from '@/utils/api.js';
-import { ElMessage, ElMessageBox} from 'element-plus';
-
-const sendForm = reactive({
-    Rid: '',
-    Sname: '',
-    BID: '',    
-    Bname: '',
-    startTime: '',
-    endTime: ''
-})
+import moment from 'moment';
 let tableData = ref([])
 onBeforeMount(() => {
     showSends()
@@ -36,7 +27,12 @@ onBeforeMount(() => {
 const showSends = () => {
     showSend('/admin/showSend').then(res => {
         if(res.status===200){
-            tableData.value = res.data
+            tableData.value = res.data;
+            tableData.value.forEach(item => {
+                item.startTime = moment(item.startTime).format('YYYY-MM-DD HH:mm:ss');
+                item.endTime ? item.endTime = moment(item.endTime).format('YYYY-MM-DD HH:mm:ss'): null;
+            })
+
         }
     }).catch(err => {
         console.log(err);

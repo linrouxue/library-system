@@ -9,6 +9,15 @@ export const login = (url, data) => {
   });
 };
 
+// 修改密码
+export const changePassword = (url, data) => {
+  return request({
+    url: url,
+    method: 'post',
+    data: data
+  });
+};
+
 // 新增用户
 export const addUser = (url, data)=>{
   return request({

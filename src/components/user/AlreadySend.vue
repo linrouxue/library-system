@@ -24,18 +24,9 @@
 </template>
 
 <script setup>
-import { ref, onBeforeMount,reactive} from 'vue'
+import { ref, onBeforeMount} from 'vue'
 import { showBackBook,userBackBook } from '@/utils/api.js';
 import { ElMessage, ElMessageBox} from 'element-plus';
-import moment from 'moment';
-
-const UserBackForm = reactive({
-    SID: '',
-    BID: '',
-    RID: '',
-    startTime: '',
-    endTime: null
-})
 let tableData = ref([])
 onBeforeMount(() => {
     showBooks()
