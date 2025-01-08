@@ -21,7 +21,7 @@ app.all('*', function(req, res, next) {
 const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: 'admin123',
+  password: 'Admin123!',
   database: 'library'
 });
 
@@ -39,9 +39,9 @@ app.listen(3000, () => {
 
 
 // 登录接口
-app.post('/login', (req, res) => {
+app.post('/api/login', (req, res) => {
   const { account, password, role } = req.body;
-  connection.query('SELECT * FROM reader WHERE RID = ?', [account], (err, results) => {
+  connection.query('SELECT * FROM Reader WHERE RID = ?', [account], (err, results) => {
     if (err) throw err;
     if (results.length === 0) {
       return res.json({ message: '账号或密码错误' });
@@ -57,35 +57,35 @@ app.post('/login', (req, res) => {
 });
  
 // 修改密码
-app.post('/changePassword', (req, res) => {
+app.post('/api/changePassword', (req, res) => {
   const { RID, password } = req.body;
-  connection.query('UPDATE reader SET password = ? WHERE RID = ?', [password, RID], (err) => {
+  connection.query('UPDATE Reader SET password = ? WHERE RID = ?', [password, RID], (err) => {
     if (err) throw err;
     res.json({ message: '密码修改成功' });
   });
 });
 
 // 新增用户
-app.post('/admin/addUser', (req, res) => {
+app.post('/api/admin/addUser', (req, res) => {
   const { RID, Sname, Sphone, password, role } = req.body;
-  connection.query('INSERT INTO reader (RID, Sname, Sphone, password, role) VALUES (?, ?, ?, ?, ?)', [RID, Sname, Sphone, password, role], (err) => {
+  connection.query('INSERT INTO Reader (RID, Sname, Sphone, password, role) VALUES (?, ?, ?, ?, ?)', [RID, Sname, Sphone, password, role], (err) => {
     if (err) throw err;
     res.json({ message: '用户添加成功' });
   });
 });
 
 // 展示用户
-app.get('/admin/showUser', (req, res) => {
-  connection.query('SELECT * FROM reader', (err, results) => {
+app.get('/api/admin/showUser', (req, res) => {
+  connection.query('SELECT * FROM Reader', (err, results) => {
     if (err) throw err;
     res.json(results);
   });
 });
 
 // 搜索用户
-app.post('/admin/searchUser', (req, res) => {
+app.post('/api/admin/searchUser', (req, res) => {
   const { search } = req.body;
-  const query = 'SELECT * FROM reader WHERE Rid LIKE ? OR Sname LIKE ?';
+  const query = 'SELECT * FROM Reader WHERE Rid LIKE ? OR Sname LIKE ?';
   const searchPattern = `%${search}%`;
   connection.query(query, [searchPattern, searchPattern], (err, results) => {
     if (err) {
@@ -97,9 +97,9 @@ app.post('/admin/searchUser', (req, res) => {
 });
 
 // 删除用户
-app.post('/admin/deleteUser', (req, res) => {
+app.post('/api/admin/deleteUser', (req, res) => {
   const { RID } = req.body;
-  connection.query('DELETE FROM reader WHERE RID = ?', [RID], (err) => {
+  connection.query('DELETE FROM Reader WHERE RID = ?', [RID], (err) => {
     if (err) throw err;
     res.json({ message: '用户删除成功' });
   });
@@ -107,26 +107,26 @@ app.post('/admin/deleteUser', (req, res) => {
 
 
 // 添加书籍
-app.post('/admin/addBook', (req, res) => {
+app.post('/api/admin/addBook', (req, res) => {
   const { BID, Bname, Author, Press } = req.body;
-  connection.query('INSERT INTO  book (BID, Bname, Author, Press) VALUES (?, ?, ?, ?)', [BID, Bname, Author, Press], (err) => {
+  connection.query('INSERT INTO  BOOK (BID, Bname, Author, Press) VALUES (?, ?, ?, ?)', [BID, Bname, Author, Press], (err) => {
     if (err) throw err;
     res.json({ message: '书籍添加成功' });
   });
 });
 
 // 展示书籍
-app.get('/admin/showBook', (req, res) => {
-  connection.query('SELECT * FROM book', (err, results) => {
+app.get('/api/admin/showBook', (req, res) => {
+  connection.query('SELECT * FROM BOOK', (err, results) => {
     if (err) throw err;
     res.json(results);
   });
 });
 
 // 搜索书籍
-app.post('/admin/searchBook', (req, res) => {
+app.post('/api/admin/searchBook', (req, res) => {
   const { search } = req.body;
-  const query = 'SELECT * FROM book WHERE BID LIKE ? OR Bname LIKE ?';
+  const query = 'SELECT * FROM BOOK WHERE BID LIKE ? OR Bname LIKE ?';
   const searchPattern = `%${search}%`;
   connection.query(query, [searchPattern, searchPattern], (err, results) => {
     if (err) {
@@ -138,16 +138,16 @@ app.post('/admin/searchBook', (req, res) => {
 });
 
 // 删除书籍
-app.post('/admin/deleteBook', (req, res) => {
+app.post('/api/admin/deleteBook', (req, res) => {
   const { BID } = req.body;
-  connection.query('DELETE FROM book WHERE BID = ?', [BID], (err) => {
+  connection.query('DELETE FROM BOOK WHERE BID = ?', [BID], (err) => {
     if (err) throw err;
     res.json({ message: '书籍删除成功' });
   });
 });
 
 // 查询借阅详情
-app.get('/admin/showSend', (req, res) => {
+app.get('/api/admin/showSend', (req, res) => {
   // 从视图表中获取
   connection.query('SELECT * FROM borrow_view ORDER BY startTime DESC', (err, results) => {
     if (err) throw err;
@@ -156,7 +156,7 @@ app.get('/admin/showSend', (req, res) => {
 });
 
 // 搜索借阅详情
-app.post('/admin/searchSend', (req, res) => {
+app.post('/api/admin/searchSend', (req, res) => {
   const { search } = req.body;
   // 从视图中获取
   const query = 'SELECT * FROM borrow_view WHERE BID LIKE ? OR RID LIKE ? OR Sname LIKE ? OR Bname LIKE ?';
@@ -173,14 +173,14 @@ app.post('/admin/searchSend', (req, res) => {
 // 用户接口
 
 // 查询书籍
-app.get('/user/showBook', (req, res) => {
+app.get('/api/user/showBook', (req, res) => {
   connection.query('SELECT * FROM books_view', (err, results) => {
     if (err) throw err;
     res.json(results);
   });
 });
 // 搜索书籍
-app.post('/user/searchBook', (req, res) => {
+app.post('/api/user/searchBook', (req, res) => {
   const { search } = req.body;
   const query = 'SELECT * FROM books_view WHERE BID LIKE ? OR Bname LIKE ?';
   const searchPattern = `%${search}%`;
@@ -194,16 +194,16 @@ app.post('/user/searchBook', (req, res) => {
 });
 
 // 借阅书籍
-app.post('/user/sendBook', (req, res) => {
+app.post('/api/user/sendBook', (req, res) => {
   const { SID, BID, RID, startTime, endTime } = req.body;
-  connection.query('INSERT INTO send (SID, BID, RID, startTime, endTime) VALUES (?, ?, ?, ?, ?)', [SID, BID, RID, startTime, endTime], (err) => {
+  connection.query('INSERT INTO SEND (SID, BID, RID, startTime, endTime) VALUES (?, ?, ?, ?, ?)', [SID, BID, RID, startTime, endTime], (err) => {
     if (err) throw err;
     res.json({ message: '借阅成功' });
   })
 });
 
 // 查看自己借阅的书籍
-app.get('/user/showBack', (req, res) => {
+app.get('/api/user/showBack', (req, res) => {
   const { RID } = req.query;
   connection.query('SELECT * FROM back_view WHERE RID = ? AND startTime IS NOT NULL AND endTime IS NULL', [RID], (err, results) => {
     if (err) throw err;
@@ -212,9 +212,9 @@ app.get('/user/showBack', (req, res) => {
 });
 
 // 归还书籍
-app.post('/user/backBook', (req, res) => {
+app.post('/api/user/backBook', (req, res) => {
   const { SID } = req.body;
-  connection.query('UPDATE send SET endTime = NOW() WHERE SID = ?', [SID], (err) => {
+  connection.query('UPDATE SEND SET endTime = NOW() WHERE SID = ?', [SID], (err) => {
     if (err) throw err;
     res.json({ message: '归还成功' });
   });
